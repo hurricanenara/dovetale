@@ -2,6 +2,7 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate_user
 
   def create
+    debugger
     user = User.find_by_email(params[:email])
     if user && user.authenticate(params[:password])
       payload = { user_id: user.id }
