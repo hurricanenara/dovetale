@@ -5,7 +5,6 @@ import Button from './common/Button';
 
 const Nav = styled.nav`
   height: 64px;
-  z-index: 8;
   position: fixed;
   width: 100%;
   top: 0;
