@@ -20,7 +20,6 @@ const GifCard = (props) => {
   return (
     <StyledDiv key={gif.id}>
       <img src={gif.url} />
-      {/* <Save /> */}
       <Save />
       <StyledSpan>{gif.title}</StyledSpan>
     </StyledDiv>

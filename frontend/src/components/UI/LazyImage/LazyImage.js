@@ -6,8 +6,8 @@ import Save from "../../UI/Save/Save";
 
 const ImageWrapper = styled.div`
   position: relative;
-  width: 35vh;
-  height: 30vh;
+  width: 200px;
+  height: 200px;
 `;
 
 const loadingAnimation = keyframes`
@@ -37,6 +37,7 @@ const StyledImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 2px;
 `;
 
 const LazyImage = ({ src, alt, id }) => {
@@ -50,7 +51,6 @@ const LazyImage = ({ src, alt, id }) => {
     <ImageWrapper>
       <Placeholder ref={refPlaceholder} />
       <LazyLoad>
-        {/* <Save /> */}
         <StyledImage
           onLoad={removePlaceholder}
           onError={removePlaceholder}

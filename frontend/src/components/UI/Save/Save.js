@@ -11,9 +11,9 @@ const StyledDiv = styled.div`
   display: flex;
   padding-bottom: 3px;
   top: 0;
-  font-size: 28px;
+  font-size: 24px;
   z-index: 10;
-  color: rgba(255, 255, 255, 0.37);
+  color: rgba(201, 201, 201, 0.4);
   cursor: pointer;
 
   &:hover {
@@ -24,7 +24,7 @@ const StyledDiv = styled.div`
 const Save = ({ id, isSaved }) => {
   const [saved, setSaved] = useState(isSaved);
   const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const [heart, setHeart] = useState(<FontAwesomeIcon icon={farHeart} />);
+  // const [heart, setHeart] = useState(<FontAwesomeIcon icon={farHeart} />);
 
   const saveGifHandler = (gifId, saved) => {
     if (!saved) {
@@ -50,7 +50,7 @@ const Save = ({ id, isSaved }) => {
         return response.json();
       })
       .then((responseData) => {
-        saved ? setSaved(false) : setSaved(true);
+        setSaved(true);
       });
   };
 
@@ -66,22 +66,25 @@ const Save = ({ id, isSaved }) => {
         return response.json();
       })
       .then((responseData) => {
-        saved ? setSaved(false) : setSaved(true);
+        setSaved(false);
       });
   };
 
   const handleHover = (status) => {
     if (status) {
-      console.log("hovered", status);
-      setHeart(() => {
-        // debugger;
-        <FontAwesomeIcon icon={faHeartBroken} />;
-        console.log(heart);
-      });
+      // console.log("hovered", status);
+      // setHeart(() => {
+      //   <FontAwesomeIcon icon={faHeartBroken} />;
+      //   console.log(heart);
+      // });
     }
   };
 
-  const symbol = saved ? <FontAwesomeIcon icon={faHeart} /> : heart;
+  const symbol = saved ? (
+    <FontAwesomeIcon icon={faHeart} />
+  ) : (
+    <FontAwesomeIcon icon={farHeart} />
+  );
   return (
     <StyledDiv
       onMouseEnter={() => handleHover(saved)}
