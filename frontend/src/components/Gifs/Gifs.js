@@ -83,6 +83,10 @@ const Gifs = () => {
         });
         setGifs(flagged);
         setSavedGifIds(sortedSavedGifIds);
+        window.localStorage.setItem(
+          "savedIds",
+          JSON.stringify(sortedSavedGifIds)
+        );
       });
   }, []);
 
@@ -103,12 +107,37 @@ const Gifs = () => {
   };
 
   const resetToAll = () => {
+    const savedGifIds = JSON.parse(window.localStorage.getItem("savedIds"));
+    let sortedSavedGifIds = savedGifIds.sort((a, b) => a - b);
+
+    const flagged = [];
+    gifs.forEach((gifObj) => {
+      if (bsearch(sortedSavedGifIds, gifObj.id) >= 0) {
+        flagged.push({ ...gifObj, saved: true });
+      } else {
+        flagged.push({ ...gifObj, saved: false });
+      }
+    });
+    setGifs(flagged);
+    setSavedGifIds(sortedSavedGifIds);
     setClickedState("all");
   };
 
   const filterSavedHandler = () => {
+    const savedGifIds = JSON.parse(window.localStorage.getItem("savedIds"));
+    let sortedSavedGifIds = savedGifIds.sort((a, b) => a - b);
+    const flagged = [];
+    gifs.forEach((gifObj) => {
+      if (bsearch(sortedSavedGifIds, gifObj.id) >= 0) {
+        flagged.push({ ...gifObj, saved: true });
+      } else {
+        flagged.push({ ...gifObj, saved: false });
+      }
+    });
+    setGifs(flagged);
+    setSavedGifIds(sortedSavedGifIds);
     const filterSaved = [];
-    for (const gif of gifs) {
+    for (const gif of flagged) {
       if (gif.saved) filterSaved.push(gif);
     }
     setClickedState("saved");
@@ -124,6 +153,8 @@ const Gifs = () => {
       return searchedGifs;
     }
   };
+
+  const newlyAddedHandler = (ids) => {};
 
   return (
     <div>

@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import LazyImage from "../UI/LazyImage/LazyImage";
 import Save from "../UI/Save/Save";
-import GifCard from "./GifCard";
 
 const Global = createGlobalStyle`
   body {

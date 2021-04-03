@@ -25,7 +25,6 @@ const Save = ({ id, isSaved }) => {
   const [saved, setSaved] = useState(isSaved);
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   // const [heart, setHeart] = useState(<FontAwesomeIcon icon={farHeart} />);
-
   const saveGifHandler = (gifId, saved) => {
     if (!saved) {
       add(gifId);
@@ -51,6 +50,9 @@ const Save = ({ id, isSaved }) => {
       })
       .then((responseData) => {
         setSaved(true);
+        const savedIds = JSON.parse(window.localStorage.getItem("savedIds"));
+        savedIds.push(gifId);
+        window.localStorage.setItem("savedIds", JSON.stringify(savedIds));
       });
   };
 
@@ -67,6 +69,9 @@ const Save = ({ id, isSaved }) => {
       })
       .then((responseData) => {
         setSaved(false);
+        const savedIds = JSON.parse(window.localStorage.getItem("savedIds"));
+        savedIds.splice(savedIds.indexOf(gifId), 1);
+        window.localStorage.setItem("savedIds", JSON.stringify(savedIds));
       });
   };
 
