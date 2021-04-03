@@ -2,6 +2,8 @@ import { useContext } from 'react';
 import Auth from './auth/Auth'
 import Navbar from './Navbar'
 import { AuthContext } from '../context/AuthContext';
+import GifList from './Gifs/GifList';
+import Gifs from './Gifs/Gifs';
 
 function App() {
   const auth = useContext(AuthContext);
@@ -13,7 +15,7 @@ function App() {
   return (
     <>
       <Navbar />
-      {/* More pages here */}
+      <Gifs />
     </>
   )
 }
