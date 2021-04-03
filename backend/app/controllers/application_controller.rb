@@ -1,17 +1,15 @@
 class ApplicationController < ActionController::API
   helper_method :current_user
-  # before_action :authenticate_user
+  before_action :authenticate_user
 
   def authenticate_user
-    debugger
     current_user || head(401)
   end
 
   def current_user
-    debugger
     token = params[:access_token] || request.headers['X-Authorization']
     if token
-      id = JWT.decode(token, Rails.application.credentials[:secret_key_base], true, { algorithm: 'HS256' })[0]['user_id']
+      id = JWT.decode(token, Rails.application.credentials.key, true, { algorithm: 'HS256' })[0]['user_id']
       @current_user ||= User.find(id)
     else
       @current_user = nil
