@@ -24,7 +24,7 @@ const Grid = styled.div`
   position: relative;
   display: grid;
   padding: 16px;
-  grid-template-columns: repeat(auto-fill, 200px);
+  grid-template-columns: repeat(auto-fill, 205px);
   grid-gap: 16px;
 `;
 
@@ -32,12 +32,12 @@ const StyledSpan = styled.span`
   position: absolute;
 `;
 
-const GifList = (props) => {
+const GifList = ({ gifs }) => {
   return (
     <div>
       <Global />
       <Grid>
-        {props.gifs.map((gif) => {
+        {gifs.map((gif) => {
           return (
             <StyledDiv key={gif.id}>
               <Save id={gif.id} isSaved={gif.saved} />

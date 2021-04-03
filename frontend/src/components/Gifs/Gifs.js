@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Saved from "../Saved/Saved";
-import Search from "../Search/Search";
 import GifList from "./GifList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const Gifs = () => {
   const [gifs, setGifs] = useState([]);
   const [savedGifs, setSavedGifs] = useState([]);
   const [savedGifIds, setSavedGifIds] = useState([]);
-  const [allClicked, setAllClicked] = useState(true);
+  const [clickedState, setClickedState] = useState("all");
+  const [searchedGifs, setSearchedGifs] = useState([]);
+  const [searched, setSearched] = useState("");
+  const searchInput = React.useRef(null);
 
   const StyledDiv = styled.div`
     position: fixed;
@@ -18,6 +21,28 @@ const Gifs = () => {
     align-items: center;
     width: 320px;
     top: 0;
+  `;
+
+  const SearchWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 21px 16px;
+    box-sizing: border-box;
+    border: 1px solid #c9c9c9;
+    border-radius: 2px;
+    width: 100%;
+
+    &:hover {
+      border: 1px solid #5c6ac4;
+    }
+  `;
+
+  const Input = styled.input`
+    outline: none;
+    border: none;
+    padding: 5px;
+    margin-left: 6px;
+    width: 100%;
   `;
 
   const bsearch = (nums, target) => {
@@ -51,7 +76,6 @@ const Gifs = () => {
         const flagged = [];
         gifs.forEach((gifObj) => {
           if (bsearch(sortedSavedGifIds, gifObj.id) >= 0) {
-            console.log("saving as true for", gifObj.id);
             flagged.push({ ...gifObj, saved: true });
           } else {
             flagged.push({ ...gifObj, saved: false });
@@ -62,8 +86,24 @@ const Gifs = () => {
       });
   }, []);
 
+  useEffect(() => {
+    searchInput.current.focus();
+  }, [searched]);
+
+  const searchedGifsHandler = (e) => {
+    setSearched(e.target.value);
+    const searchedGifs = [];
+    for (const gif of gifs) {
+      if (gif.title.includes(searched)) {
+        searchedGifs.push(gif);
+      }
+    }
+    setClickedState("searched");
+    setSearchedGifs(searchedGifs);
+  };
+
   const resetToAll = () => {
-    setAllClicked(true);
+    setClickedState("all");
   };
 
   const filterSavedHandler = () => {
@@ -71,23 +111,45 @@ const Gifs = () => {
     for (const gif of gifs) {
       if (gif.saved) filterSaved.push(gif);
     }
-    setAllClicked(false);
+    setClickedState("saved");
     setSavedGifs(filterSaved);
+  };
+
+  const clickedStateHander = (state) => {
+    if (state === "all") {
+      return [...gifs];
+    } else if (state === "saved") {
+      return savedGifs;
+    } else if ("searched") {
+      return searchedGifs;
+    }
   };
 
   return (
     <div>
       <section>
         <StyledDiv>
-          <Search allGifs={gifs} savedGifIds={savedGifIds} />
+          <SearchWrapper>
+            <FontAwesomeIcon
+              style={{ paddingLeft: "6%", color: "#c9c9c9" }}
+              icon={faSearch}
+            />
+            <Input
+              ref={searchInput}
+              type="search"
+              value={searched}
+              onChange={searchedGifsHandler}
+            />
+          </SearchWrapper>
           <div style={{ cursor: "pointer" }} onClick={resetToAll}>
             All
           </div>
+          <div style={{ width: "10px" }}></div>
           <div style={{ cursor: "pointer" }} onClick={filterSavedHandler}>
             Saved
           </div>
         </StyledDiv>
-        <GifList gifs={allClicked ? gifs : savedGifs} />
+        <GifList gifs={clickedStateHander(clickedState)} />
       </section>
     </div>
   );
