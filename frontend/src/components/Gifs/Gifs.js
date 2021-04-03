@@ -45,18 +45,18 @@ const Gifs = () => {
       .then((resData) => {
         let sortedSavedGifIds = resData.saved.sort((a, b) => a - b);
         let gifs = resData.data;
-        gifs.map((gifObj) => {
+        const flagged = [];
+        gifs.forEach((gifObj) => {
           if (bsearch(sortedSavedGifIds, gifObj.id) >= 0) {
             console.log("saving as true for", gifObj.id);
-            return (gifObj.id += 100);
+            flagged.push({ ...gifObj, saved: true });
+          } else {
+            flagged.push({ ...gifObj, saved: false });
           }
-          // else {
-          // return (gifObj["saved"] = false);
-          // }
         });
-        console.log(gifs);
-        console.log(sortedSavedGifIds);
-        setGifs(gifs);
+        // console.log(sortedSavedGifIds);
+        setGifs(flagged);
+        // console.log(flagged);
       });
   }, []);
 

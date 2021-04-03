@@ -14,7 +14,7 @@ class SavedListsController < ApplicationController
                 render json: { message: "saved gif" }
             end
         else
-            render json: {message: "already saved"}
+            render json: { message: "already saved" }
         end
     end
 end

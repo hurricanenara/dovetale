@@ -48,7 +48,7 @@ const GifList = (props) => {
           // return <GifCard gif={gif} key={gif.id} />
           return (
             <StyledDiv key={gif.id}>
-              <Save id={gif.id} isSaved={false} />
+              <Save id={gif.id} isSaved={gif.saved} />
               <LazyImage src={gif.url} alt={gif.title} />
             </StyledDiv>
           );
