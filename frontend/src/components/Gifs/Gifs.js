@@ -6,6 +6,9 @@ import GifList from "./GifList";
 
 const Gifs = () => {
   const [gifs, setGifs] = useState([]);
+  const [savedGifs, setSavedGifs] = useState([]);
+  const [savedGifIds, setSavedGifIds] = useState([]);
+  const [allClicked, setAllClicked] = useState(true);
 
   const StyledDiv = styled.div`
     position: fixed;
@@ -54,29 +57,37 @@ const Gifs = () => {
             flagged.push({ ...gifObj, saved: false });
           }
         });
-        // console.log(sortedSavedGifIds);
         setGifs(flagged);
-        // console.log(flagged);
+        setSavedGifIds(sortedSavedGifIds);
       });
   }, []);
 
-  const filteredGifHandler = (filteredGifs) => {
-    setGifs(filteredGifs);
+  const resetToAll = () => {
+    setAllClicked(true);
   };
 
-  const filterSavedHandler = (savedGifs) => {
-    setGifs(savedGifs);
+  const filterSavedHandler = () => {
+    const filterSaved = [];
+    for (const gif of gifs) {
+      if (gif.saved) filterSaved.push(gif);
+    }
+    setAllClicked(false);
+    setSavedGifs(filterSaved);
   };
 
   return (
     <div>
       <section>
         <StyledDiv>
-          <Search onLoadGifs={filteredGifHandler} />
-          <div style={{ color: "purple" }}>All</div>
-          <Saved onLoadGifs={filterSavedHandler} />
+          <Search allGifs={gifs} savedGifIds={savedGifIds} />
+          <div style={{ cursor: "pointer" }} onClick={resetToAll}>
+            All
+          </div>
+          <div style={{ cursor: "pointer" }} onClick={filterSavedHandler}>
+            Saved
+          </div>
         </StyledDiv>
-        <GifList gifs={gifs} />
+        <GifList gifs={allClicked ? gifs : savedGifs} />
       </section>
     </div>
   );
