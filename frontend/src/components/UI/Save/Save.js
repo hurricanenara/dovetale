@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faHeartBroken } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 import styled from "styled-components";
 
@@ -24,13 +24,22 @@ const StyledDiv = styled.div`
 const Save = ({ id, isSaved }) => {
   const [saved, setSaved] = useState(isSaved);
   const [token, setToken] = useState(window.localStorage.getItem("token"));
-  // const [heart, setHeart] = useState(<FontAwesomeIcon icon={farHeart} />);
+
   const saveGifHandler = (gifId, saved) => {
-    if (!saved) {
-      add(gifId);
+    !saved ? add(gifId) : remove(gifId);
+  };
+
+  const savedIdsSnapshot = () => {
+    return JSON.parse(window.localStorage.getItem("savedIds"));
+  };
+
+  const updateSavedIdSnapshot = (currentSnapshot, gifId, behavior) => {
+    if (behavior === "add") {
+      currentSnapshot.push(gifId);
     } else {
-      remove(gifId);
+      currentSnapshot.splice(currentSnapshot.indexOf(gifId), 1);
     }
+    window.localStorage.setItem("savedIds", JSON.stringify(currentSnapshot));
   };
 
   const add = (gifId) => {
@@ -48,11 +57,10 @@ const Save = ({ id, isSaved }) => {
       .then((response) => {
         return response.json();
       })
-      .then((responseData) => {
+      .then(() => {
         setSaved(true);
-        const savedIds = JSON.parse(window.localStorage.getItem("savedIds"));
-        savedIds.push(gifId);
-        window.localStorage.setItem("savedIds", JSON.stringify(savedIds));
+        const savedIds = savedIdsSnapshot();
+        updateSavedIdSnapshot(savedIds, gifId, "add");
       });
   };
 
@@ -67,22 +75,11 @@ const Save = ({ id, isSaved }) => {
       .then((response) => {
         return response.json();
       })
-      .then((responseData) => {
+      .then(() => {
         setSaved(false);
-        const savedIds = JSON.parse(window.localStorage.getItem("savedIds"));
-        savedIds.splice(savedIds.indexOf(gifId), 1);
-        window.localStorage.setItem("savedIds", JSON.stringify(savedIds));
+        const savedIds = savedIdsSnapshot();
+        updateSavedIdSnapshot(savedIds, gifId, "remove");
       });
-  };
-
-  const handleHover = (status) => {
-    if (status) {
-      // console.log("hovered", status);
-      // setHeart(() => {
-      //   <FontAwesomeIcon icon={faHeartBroken} />;
-      //   console.log(heart);
-      // });
-    }
   };
 
   const symbol = saved ? (
@@ -91,11 +88,7 @@ const Save = ({ id, isSaved }) => {
     <FontAwesomeIcon icon={farHeart} />
   );
   return (
-    <StyledDiv
-      onMouseEnter={() => handleHover(saved)}
-      onClick={() => saveGifHandler(id, saved)}>
-      {symbol}
-    </StyledDiv>
+    <StyledDiv onClick={() => saveGifHandler(id, saved)}>{symbol}</StyledDiv>
   );
 };
 

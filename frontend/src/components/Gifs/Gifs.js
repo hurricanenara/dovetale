@@ -11,6 +11,10 @@ const Gifs = () => {
   const [clickedState, setClickedState] = useState("all");
   const [searchedGifs, setSearchedGifs] = useState([]);
   const [searched, setSearched] = useState("");
+  const [allColor, setAllColor] = useState("#5c6ac4");
+  const [savedColor, setSavedColor] = useState("#b0b0b0");
+  const [active, setActive] = useState("#5c6ac4");
+  const [inactive, setInactive] = useState("#b0b0b0");
   const searchInput = React.useRef(null);
 
   const StyledDiv = styled.div`
@@ -73,14 +77,8 @@ const Gifs = () => {
       .then((resData) => {
         let sortedSavedGifIds = resData.saved.sort((a, b) => a - b);
         let gifs = resData.data;
-        const flagged = [];
-        gifs.forEach((gifObj) => {
-          if (bsearch(sortedSavedGifIds, gifObj.id) >= 0) {
-            flagged.push({ ...gifObj, saved: true });
-          } else {
-            flagged.push({ ...gifObj, saved: false });
-          }
-        });
+        const flagged = flagGifs(gifs, sortedSavedGifIds);
+
         setGifs(flagged);
         setSavedGifIds(sortedSavedGifIds);
         window.localStorage.setItem(
@@ -94,13 +92,23 @@ const Gifs = () => {
     searchInput.current.focus();
   }, [searched]);
 
+  const flagGifs = (gifs, savedGifIds) => {
+    const flagged = [];
+    gifs.forEach((gifObj) => {
+      if (bsearch(savedGifIds, gifObj.id) >= 0) {
+        flagged.push({ ...gifObj, saved: true });
+      } else {
+        flagged.push({ ...gifObj, saved: false });
+      }
+    });
+    return flagged;
+  };
+
   const searchedGifsHandler = (e) => {
     setSearched(e.target.value);
     const searchedGifs = [];
     for (const gif of gifs) {
-      if (gif.title.includes(searched)) {
-        searchedGifs.push(gif);
-      }
+      if (gif.title.includes(searched)) searchedGifs.push(gif);
     }
     setClickedState("searched");
     setSearchedGifs(searchedGifs);
@@ -109,15 +117,8 @@ const Gifs = () => {
   const resetToAll = () => {
     const savedGifIds = JSON.parse(window.localStorage.getItem("savedIds"));
     let sortedSavedGifIds = savedGifIds.sort((a, b) => a - b);
+    const flagged = flagGifs(gifs, sortedSavedGifIds);
 
-    const flagged = [];
-    gifs.forEach((gifObj) => {
-      if (bsearch(sortedSavedGifIds, gifObj.id) >= 0) {
-        flagged.push({ ...gifObj, saved: true });
-      } else {
-        flagged.push({ ...gifObj, saved: false });
-      }
-    });
     setGifs(flagged);
     setSavedGifIds(sortedSavedGifIds);
     setClickedState("all");
@@ -126,16 +127,11 @@ const Gifs = () => {
   const filterSavedHandler = () => {
     const savedGifIds = JSON.parse(window.localStorage.getItem("savedIds"));
     let sortedSavedGifIds = savedGifIds.sort((a, b) => a - b);
-    const flagged = [];
-    gifs.forEach((gifObj) => {
-      if (bsearch(sortedSavedGifIds, gifObj.id) >= 0) {
-        flagged.push({ ...gifObj, saved: true });
-      } else {
-        flagged.push({ ...gifObj, saved: false });
-      }
-    });
+    const flagged = flagGifs(gifs, sortedSavedGifIds);
+
     setGifs(flagged);
     setSavedGifIds(sortedSavedGifIds);
+
     const filterSaved = [];
     for (const gif of flagged) {
       if (gif.saved) filterSaved.push(gif);
@@ -146,15 +142,13 @@ const Gifs = () => {
 
   const clickedStateHander = (state) => {
     if (state === "all") {
-      return [...gifs];
+      return gifs;
     } else if (state === "saved") {
       return savedGifs;
     } else if ("searched") {
       return searchedGifs;
     }
   };
-
-  const newlyAddedHandler = (ids) => {};
 
   return (
     <div>
@@ -172,11 +166,24 @@ const Gifs = () => {
               onChange={searchedGifsHandler}
             />
           </SearchWrapper>
-          <div style={{ cursor: "pointer" }} onClick={resetToAll}>
+          <div
+            style={{
+              cursor: "pointer",
+              color:
+                clickedState === "all" || clickedState === "searched"
+                  ? "#f69d6a"
+                  : "b0b0b0",
+            }}
+            onClick={resetToAll}>
             All
           </div>
-          <div style={{ width: "10px" }}></div>
-          <div style={{ cursor: "pointer" }} onClick={filterSavedHandler}>
+          <div style={{ width: "16px" }}> </div>
+          <div
+            style={{
+              cursor: "pointer",
+              color: clickedState === "saved" ? "#f69d6a" : "b0b0b0",
+            }}
+            onClick={filterSavedHandler}>
             Saved
           </div>
         </StyledDiv>

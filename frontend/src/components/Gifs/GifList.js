@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-// import classes from "./GifList.module.css";
+import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import LazyImage from "../UI/LazyImage/LazyImage";
 import Save from "../UI/Save/Save";
@@ -21,19 +20,23 @@ const StyledDiv = styled.div`
 
 const Grid = styled.div`
   position: relative;
+  margin-left: 10px;
   display: grid;
   padding: 16px;
-  grid-template-columns: repeat(auto-fill, 205px);
+  grid-template-columns: repeat(auto-fit, 205px);
   grid-gap: 16px;
 `;
 
-const StyledSpan = styled.span`
-  position: absolute;
-`;
-
 const GifList = ({ gifs }) => {
+  const nothing = !gifs.length ? (
+    <div>
+      <Global />
+      <div>Nothing to see here. Heart some gifs!</div>
+    </div>
+  ) : null;
   return (
     <div>
+      {nothing}
       <Global />
       <Grid>
         {gifs.map((gif) => {

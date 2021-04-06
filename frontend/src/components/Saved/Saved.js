@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Gifs from "../Gifs/Gifs";
 
-const Saved = ({ onLoadGifs, allGifs, savedGifIds }) => {
+const Saved = ({ onLoadGifs, allGifs }) => {
   const [savedGifs, setSavedGifs] = useState([]);
 
   const StyledDiv = styled.div`
@@ -16,14 +15,9 @@ const Saved = ({ onLoadGifs, allGifs, savedGifIds }) => {
 
   useEffect(() => {
     const filteredSavedGifs = [];
-    console.log(savedGifs);
     for (const gif of allGifs) {
-      if (gif.saved) {
-        filteredSavedGifs.push(gif);
-      }
+      if (gif.saved) filteredSavedGifs.push(gif);
     }
-    console.log(filteredSavedGifs);
-    // onLoadGifs(filteredSavedGifs);
   }, [savedGifs, onLoadGifs, allGifs]);
 
   return <StyledDiv>Saved</StyledDiv>;
