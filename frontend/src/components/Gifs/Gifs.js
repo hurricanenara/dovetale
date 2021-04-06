@@ -11,10 +11,6 @@ const Gifs = () => {
   const [clickedState, setClickedState] = useState("all");
   const [searchedGifs, setSearchedGifs] = useState([]);
   const [searched, setSearched] = useState("");
-  const [allColor, setAllColor] = useState("#5c6ac4");
-  const [savedColor, setSavedColor] = useState("#b0b0b0");
-  const [active, setActive] = useState("#5c6ac4");
-  const [inactive, setInactive] = useState("#b0b0b0");
   const searchInput = React.useRef(null);
 
   const StyledDiv = styled.div`
@@ -25,6 +21,10 @@ const Gifs = () => {
     align-items: center;
     width: 320px;
     top: 0;
+  `;
+
+  const ClickableDiv = styled.div`
+    cursor: pointer;
   `;
 
   const SearchWrapper = styled.div`
@@ -166,9 +166,8 @@ const Gifs = () => {
               onChange={searchedGifsHandler}
             />
           </SearchWrapper>
-          <div
+          <ClickableDiv
             style={{
-              cursor: "pointer",
               color:
                 clickedState === "all" || clickedState === "searched"
                   ? "#f69d6a"
@@ -176,16 +175,15 @@ const Gifs = () => {
             }}
             onClick={resetToAll}>
             All
-          </div>
+          </ClickableDiv>
           <div style={{ width: "16px" }}> </div>
-          <div
+          <ClickableDiv
             style={{
-              cursor: "pointer",
               color: clickedState === "saved" ? "#f69d6a" : "b0b0b0",
             }}
             onClick={filterSavedHandler}>
             Saved
-          </div>
+          </ClickableDiv>
         </StyledDiv>
         <GifList gifs={clickedStateHander(clickedState)} />
       </section>
