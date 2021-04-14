@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_02_203255) do
+ActiveRecord::Schema.define(version: 2021_04_14_180009) do
 
   create_table "gifs", force: :cascade do |t|
     t.string "title"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2021_04_02_203255) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["gif_id"], name: "index_saved_lists_on_gif_id"
+    t.index ["user_id", "gif_id"], name: "index_saved_lists_on_user_id_and_gif_id", unique: true
     t.index ["user_id"], name: "index_saved_lists_on_user_id"
   end
 

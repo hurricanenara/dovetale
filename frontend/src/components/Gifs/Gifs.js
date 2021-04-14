@@ -106,12 +106,12 @@ const Gifs = () => {
 
   const searchedGifsHandler = (e) => {
     setSearched(e.target.value);
-    const searchedGifs = [];
-    for (const gif of gifs) {
-      if (gif.title.includes(searched)) searchedGifs.push(gif);
-    }
+    const searchedGifs = gifs.filter((gif) =>
+      gif.title.includes(e.target.value)
+    );
     setClickedState("searched");
     setSearchedGifs(searchedGifs);
+    // console.log(searched);
   };
 
   const resetToAll = () => {
@@ -126,6 +126,7 @@ const Gifs = () => {
 
   const filterSavedHandler = () => {
     const savedGifIds = JSON.parse(window.localStorage.getItem("savedIds"));
+    // use hash to optimize
     let sortedSavedGifIds = savedGifIds.sort((a, b) => a - b);
     const flagged = flagGifs(gifs, sortedSavedGifIds);
 

@@ -3,13 +3,12 @@ class SavedListsController < ApplicationController
         gif_id = params[:gif_id]
         @current_user = current_user
         @record = SavedList.new(user_id: @current_user.id, gif_id: gif_id)
-        if !SavedList.exists?(user_id: @current_user.id, gif_id: gif_id)
-            if @record.save
-                render json: { message: "saved gif" }
-            end
-        else
+        begin
+            @record.save
+        rescue ActiveRecord::RecordNotUnique
             render json: { message: "already saved" }
         end
+        
     end
 
     def destroy
